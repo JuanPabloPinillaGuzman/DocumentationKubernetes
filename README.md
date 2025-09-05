@@ -1,5 +1,7 @@
 # Guía rápida de Kubernetes con Minikube
 
+![Arquitectura de Kubernetes](KubernetesArchitecture.jpg)
+
 ## Requisitos uso
 
 ### Instalar Docker
@@ -28,14 +30,11 @@ choco install minikube
 [Descargar Lens](https://k8slens.dev/?utm_source=chatgpt.com)
 
 ## Iniciar un clúster minikube
-Así que ahora que hemos instalado minikube, podemos iniciar un clúster desde un terminal con acceso de administrador utilizando el siguiente comando:   
 ```bash
 minikube start --driver=docker
 ```
-Este comando extraerá automáticamente los binarios de Kubernetes necesarios e iniciará un clúster de un solo nodo por ti.
 
 ## Verificar el clúster
-Ahora podemos verificar el estado del clúster para comprobar si todo funciona como se espera:
 ```bash
 minikube status
 ```
@@ -48,7 +47,7 @@ minikube
   apiserver: Running
   kubeconfig: Configured
 ```
-Ahora podemos dar un paso más y utilizar kubectl para recuperar todos los nodos de nuestro clúster, que debería ser sólo uno:
+Ver nodos del clúster:
 ```bash
 kubectl get nodes
 ```
@@ -59,25 +58,16 @@ minikube   Ready    control-plane   10m   v1.32.0
 ```
 
 ## Detener el clúster
-En caso de que quieras detener el clúster para liberar algunos recursos si el clúster no es necesario, puedes ejecutar:
 ```bash
 minikube stop
 ```
-Sólo tienes que volver a iniciarlo la próxima vez que quieras seguir trabajando con Kubernetes.
 
 ## Eliminar el clúster
-En caso de que quieras eliminar completamente tu clúster minikube y todos los recursos añadidos a él, puedes ejecutar:
 ```bash
 minikube delete
 ```
 
 ---
-
-# Conceptos básicos de Kubernetes: Pods, Despliegues, Servicios y Namespaces
-
-Antes de crear la primera aplicación, es esencial comprender los fundamentos de Kubernetes. Si quieres una introducción más profunda a Kubernetes, te recomiendo que consultes el curso [Introducción a Kubernetes](https://www.udemy.com/course/introduccion-a-kubernetes/).
-
-Los conceptos más básicos de Kubernetes son **Pods**, **Despliegues** y **Servicios**. Conocer estos tres tipos de recursos puede ayudarte a crear aplicaciones potentes. Por tanto, vamos a profundizar en ellas.
 
 ## ¿Qué son los Pods?
 Un Pod es la unidad desplegable más pequeña de Kubernetes. Ejecuta uno o más contenedores estrechamente acoplados con el mismo almacenamiento, red y espacio de nombres.
@@ -173,7 +163,7 @@ Guárdalo como `namespace.yaml` y aplícalo usando:
 kubectl apply -f namespace.yaml
 ```
 
-Puedes listar todos los namespaces con:
+Listar todos los namespaces con:
 ```bash
 kubectl get namespaces
 ```
@@ -208,10 +198,10 @@ kubectl get deployment -n my-namespace
 
 ---
 
-# Gestionar tu primera aplicación con Kubernetes
+# Gestionar una aplicación con Kubernetes
 
 ## Crear un despliegue de aplicación web sencillo
-Crea un archivo llamado `nginx-deployment.yaml`:
+Crear un archivo llamado `nginx-deployment.yaml`:
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -233,14 +223,14 @@ spec:
         ports:
         - containerPort: 80
 ```
-Aplica la implementación:
+Aplicar la implementación:
 ```bash
 kubectl apply -f nginx-deployment.yaml
 kubectl get pods
 ```
 
 ## Exponer la aplicación con un servicio
-Crea un archivo llamado `nginx-service.yaml`:
+Crear un archivo llamado `nginx-service.yaml`:
 ```yaml
 apiVersion: v1
 kind: Service
@@ -255,18 +245,18 @@ spec:
     targetPort: 80
   type: NodePort
 ```
-Aplica el servicio:
+Aplicar el servicio:
 ```bash
 kubectl apply -f nginx-service.yaml
 ```
-Obtén la URL del servicio:
+Obtener la URL del servicio:
 ```bash
 minikube service nginx-service --url
 ```
-Abre esa URL en tu navegador, y deberías ver la página de bienvenida de nginx.
+Abrir la URL en tu navegador, y se deberia ver la página de bienvenida de nginx.
 
 ## Escalar la aplicación
-Escala el despliegue a 3 réplicas:
+Escalar el despliegue a 3 réplicas:
 ```bash
 kubectl scale deployment nginx-deployment --replicas=3
 kubectl get pods
@@ -274,7 +264,7 @@ kubectl get endpoints nginx-service
 ```
 
 ## Actualizaciones continuas
-Actualiza la versión de nginx:
+Actualizar la versión de nginx:
 ```bash
 kubectl set image deployment/nginx-deployment nginx=nginx:1.23
 kubectl rollout status deployment/nginx-deployment
