@@ -1,4 +1,4 @@
-# Guía rápida de Kubernetes con Minikube
+# Documentacion para Kubernetes
 
 ![Arquitectura de Kubernetes](KubernetesArchitecture.jpg)
 
